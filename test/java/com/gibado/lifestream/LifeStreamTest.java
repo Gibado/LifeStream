@@ -3,9 +3,10 @@ package com.gibado.lifestream;
 import com.gibado.lifestream.contributors.LifeStreamCalculator;
 import com.gibado.lifestream.contributors.LifeStreamCounter;
 import com.gibado.lifestream.observers.LifeStreamLogger;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LifeStreamTest {
     private LifeStream lifeStream = new LifeStream();
@@ -20,24 +21,26 @@ public class LifeStreamTest {
         LifeStreamLogger logger = new LifeStreamLogger();
         LifeStreamCounter counter = new LifeStreamCounter();
 
-        Assert.assertEquals(0, lifeStream.getContributorSize());
-        Assert.assertEquals(0, lifeStream.getObserverSize());
+        assertEquals(0, lifeStream.getContributorSize());
+        assertEquals(0, lifeStream.getObserverSize());
 
         LifeStreamHelper.connect(lifeStream, logger);
-        Assert.assertEquals(0, lifeStream.getContributorSize());
-        Assert.assertEquals(1, lifeStream.getObserverSize());
+        assertEquals(0, lifeStream.getContributorSize());
+        assertEquals(1, lifeStream.getObserverSize());
 
         LifeStreamHelper.connect(lifeStream, counter);
-        Assert.assertEquals(1, lifeStream.getContributorSize());
-        Assert.assertEquals(1, lifeStream.getObserverSize());
+        assertEquals(1, lifeStream.getContributorSize());
+        assertEquals(1, lifeStream.getObserverSize());
 
         LifeStreamHelper.disconnect(lifeStream, counter);
-        Assert.assertEquals(0, lifeStream.getContributorSize());
-        Assert.assertEquals(1, lifeStream.getObserverSize());
+        assertEquals(0, lifeStream.getContributorSize());
+        assertEquals(1, lifeStream.getObserverSize());
 
         LifeStreamHelper.disconnect(lifeStream, logger);
-        Assert.assertEquals(0, lifeStream.getContributorSize());
-        Assert.assertEquals(0, lifeStream.getObserverSize());
+        assertEquals(0, lifeStream.getContributorSize());
+        assertEquals(0, lifeStream.getObserverSize());
+
+        assertEquals(0, lifeStream.getEventMessageStorageSize());
     }
 
     @Test
@@ -51,6 +54,8 @@ public class LifeStreamTest {
         for(int i = 0; i < 5; i++) {
             counter.postUpdate();
         }
+
+        assertEquals(5, lifeStream.getEventMessageStorageSize());
     }
 
     @Test
@@ -63,11 +68,13 @@ public class LifeStreamTest {
         LifeStreamHelper.connect(lifeStream, counter);
         LifeStreamHelper.connect(lifeStream, calculator);
 
-        Assert.assertEquals(2, lifeStream.getContributorSize());
-        Assert.assertEquals(2, lifeStream.getObserverSize());
+        assertEquals(2, lifeStream.getContributorSize());
+        assertEquals(2, lifeStream.getObserverSize());
 
         for(int i = 0; i < 5; i++) {
             counter.postUpdate();
         }
+
+        assertEquals(15, lifeStream.getEventMessageStorageSize());
     }
 }

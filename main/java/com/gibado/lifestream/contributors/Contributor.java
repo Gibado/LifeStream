@@ -9,17 +9,11 @@ public interface Contributor extends LifeStreamNode {
     /**
      * posts a message string to the LifeStream
      */
-    public void postUpdate();
-
-    /**
-     * Assigns this contributor an ID
-     * @param id ID for this contributor
-     */
-    public void setId(int id);
+    void postUpdate();
 
     /**
      * Returns a name representative for this contributor
      * @return Returns a name representative for this contributor
      */
-    public String getName();
+    String getName();
 }
