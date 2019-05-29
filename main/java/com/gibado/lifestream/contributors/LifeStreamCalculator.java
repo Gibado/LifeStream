@@ -1,5 +1,6 @@
 package com.gibado.lifestream.contributors;
 
+import com.gibado.lifestream.EventMessage;
 import com.gibado.lifestream.LifeStream;
 import com.gibado.lifestream.observers.SelectiveObserver;
 
@@ -14,8 +15,8 @@ public class LifeStreamCalculator implements Contributor, SelectiveObserver {
 
     @Override
     public void postUpdate() {
-        lifeStream.update("String", "Doubled = " + doubled, this);
-        lifeStream.update("String", "Halved = " + halved, this);
+        lifeStream.update(new EventMessage("String", "Doubled = " + doubled, this));
+        lifeStream.update(new EventMessage("String", "Halved = " + halved, this));
     }
 
     @Override

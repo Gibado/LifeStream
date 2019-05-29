@@ -19,7 +19,7 @@ public class LifeStream {
     /** List of observers */
     private List<Observer> observers = new ArrayList<>();
     /** Message details */
-    private Object messageDetails = null;
+    private EventMessage lastMessage = null;
 
     /**
      * Returns the number of contributors for this LifeStream
@@ -42,7 +42,7 @@ public class LifeStream {
      * @return Returns the message details associated with the most recent post
      */
     public Object getMessageDetails() {
-        return messageDetails;
+        return this.lastMessage.getDetails();
     }
 
     /**
@@ -71,21 +71,19 @@ public class LifeStream {
 
     /**
      * Triggers an update to the LifeStream, which will notify observers
-     * @param messageType Message Type
-     * @param messageDetails Object holding any additional data
-     * @param contributor Contributor that is posting this update
+     * @param message Message to post to the stream
      */
-    public void update(String messageType, Object messageDetails, Contributor contributor) {
+    public void update(EventMessage message) {
 //        String newMessage = idMap.get(contributor) + " (" + messageType + "): " + messageDetails.toString();
 //        this.messageType = messageType;
-        this.messageDetails = messageDetails;
+        this.lastMessage = message;
         for (Observer observer : observers) {
-            if (!contributor.equals(observer)) {
+            if (!lastMessage.getAuthor().equals(observer)) {
                 if (observer instanceof SelectiveObserver
-                    && !((SelectiveObserver) observer).wantsUpdateType(messageType)) {
+                    && !((SelectiveObserver) observer).wantsUpdateType(lastMessage.getType())) {
                     continue;
                 }
-                observer.onUpdate(messageType);
+                observer.onUpdate(lastMessage.getType());
             }
         }
     }

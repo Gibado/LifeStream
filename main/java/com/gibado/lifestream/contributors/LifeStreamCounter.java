@@ -1,5 +1,6 @@
 package com.gibado.lifestream.contributors;
 
+import com.gibado.lifestream.EventMessage;
 import com.gibado.lifestream.LifeStream;
 
 /**
@@ -12,7 +13,7 @@ public class LifeStreamCounter implements Contributor {
 
     @Override
     public void postUpdate() {
-        lifeStream.update("Integer", this.count++, this);
+        lifeStream.update(new EventMessage("Integer", this.count++, this));
     }
 
     @Override
