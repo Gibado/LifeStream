@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LifeStreamTest {
-    private LifeStream lifeStream = null;
+    private LifeStream lifeStream = new LifeStream();
 
     @Before
     public void setup() {
@@ -23,19 +23,19 @@ public class LifeStreamTest {
         Assert.assertEquals(0, lifeStream.getContributorSize());
         Assert.assertEquals(0, lifeStream.getObserverSize());
 
-        logger.connectTo(lifeStream);
+        LifeStreamHelper.connect(lifeStream, logger);
         Assert.assertEquals(0, lifeStream.getContributorSize());
         Assert.assertEquals(1, lifeStream.getObserverSize());
 
-        counter.connectTo(lifeStream);
+        LifeStreamHelper.connect(lifeStream, counter);
         Assert.assertEquals(1, lifeStream.getContributorSize());
         Assert.assertEquals(1, lifeStream.getObserverSize());
 
-        counter.disconnect();
+        LifeStreamHelper.disconnect(lifeStream, counter);
         Assert.assertEquals(0, lifeStream.getContributorSize());
         Assert.assertEquals(1, lifeStream.getObserverSize());
 
-        logger.disconnect();
+        LifeStreamHelper.disconnect(lifeStream, logger);
         Assert.assertEquals(0, lifeStream.getContributorSize());
         Assert.assertEquals(0, lifeStream.getObserverSize());
     }
@@ -45,8 +45,8 @@ public class LifeStreamTest {
         LifeStreamLogger logger = new LifeStreamLogger();
         LifeStreamCounter counter = new LifeStreamCounter();
 
-        logger.connectTo(lifeStream);
-        counter.connectTo(lifeStream);
+        LifeStreamHelper.connect(lifeStream, logger);
+        LifeStreamHelper.connect(lifeStream, counter);
 
         for(int i = 0; i < 5; i++) {
             counter.postUpdate();
@@ -59,9 +59,9 @@ public class LifeStreamTest {
         LifeStreamCounter counter = new LifeStreamCounter();
         LifeStreamCalculator calculator = new LifeStreamCalculator();
 
-        logger.connectTo(lifeStream);
-        counter.connectTo(lifeStream);
-        calculator.connectTo(lifeStream);
+        LifeStreamHelper.connect(lifeStream, logger);
+        LifeStreamHelper.connect(lifeStream, counter);
+        LifeStreamHelper.connect(lifeStream, calculator);
 
         Assert.assertEquals(2, lifeStream.getContributorSize());
         Assert.assertEquals(2, lifeStream.getObserverSize());

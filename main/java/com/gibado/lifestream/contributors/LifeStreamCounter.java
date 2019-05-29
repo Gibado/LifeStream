@@ -1,11 +1,12 @@
 package com.gibado.lifestream.contributors;
 
-import com.gibado.lifestream.LifeStreamNode;
+import com.gibado.lifestream.LifeStream;
 
 /**
  * Simple Contributor that posts an incrementing integer
  */
-public class LifeStreamCounter extends LifeStreamNode implements Contributor {
+public class LifeStreamCounter implements Contributor {
+    private LifeStream lifeStream;
     private int id = 0;
     private Integer count = 0;
 
@@ -17,5 +18,15 @@ public class LifeStreamCounter extends LifeStreamNode implements Contributor {
     @Override
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String getName() {
+        return "Life Stream Counter";
+    }
+
+    @Override
+    public void setLifeStream(LifeStream lifeStream) {
+        this.lifeStream = lifeStream;
     }
 }
