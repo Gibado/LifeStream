@@ -5,33 +5,21 @@ import com.gibado.lifestream.data.EventMessage;
 import com.gibado.lifestream.data.EventMessageTag;
 import com.gibado.lifestream.data.LifeTree;
 import com.gibado.lifestream.observers.Observer;
-import com.gibado.lifestream.observers.SelectiveObserver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LifeStream {
     private LifeTree lifeTree = new LifeTree();
+    private EventStream eventStream = new EventStream(lifeTree);
     private List<Contributor> contributorList = new ArrayList<>();
-
-    /** List of observers */
-    private List<Observer> observers = new ArrayList<>();
 
     /**
      * Triggers an update to the LifeStream, which will notify observers
      * @param message Message to post to the stream
      */
     public void update(EventMessage message) {
-        lifeTree.add(message);
-        for (Observer observer : observers) {
-            if (!message.getAuthor().equals(observer)) {
-                if (observer instanceof SelectiveObserver
-                        && !((SelectiveObserver) observer).wantsUpdateType(message.getTag().getType())) {
-                    continue;
-                }
-                observer.onUpdate(message.getTag());
-            }
-        }
+        eventStream.addMessage(message);
     }
 
     /**
@@ -47,7 +35,7 @@ public class LifeStream {
      * @return Returns the number of observers for this LifeStream
      */
     public int getObserverSize() {
-        return observers.size();
+        return eventStream.getObserverSize();
     }
 
     public int getEventMessageStorageSize() { return this.lifeTree.size(); }
@@ -57,7 +45,11 @@ public class LifeStream {
      * @return Returns the message details associated with the most recent post
      */
     public Object getMessageDetails(EventMessageTag tag) {
-        return lifeTree.get(tag).getDetails();
+        return getMessage(tag).getDetails();
+    }
+
+    public EventMessage getMessage(EventMessageTag tag) {
+        return lifeTree.get(tag);
     }
 
     /**
@@ -69,7 +61,7 @@ public class LifeStream {
             contributorList.add((Contributor) node);
         }
         if (node instanceof Observer) {
-            observers.add((Observer) node);
+            eventStream.addObserver((Observer) node);
         }
     }
 
@@ -78,7 +70,9 @@ public class LifeStream {
      * @param node LifeStreamNode to forget
      */
     public void removeLifeStreamNode(LifeStreamNode node) {
-        observers.remove(node);
+        if (node instanceof Observer) {
+            eventStream.removeObserver((Observer) node);
+        }
         contributorList.remove(node);
     }
 }

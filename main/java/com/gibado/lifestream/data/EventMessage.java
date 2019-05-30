@@ -41,4 +41,8 @@ public class EventMessage {
     public long getTimeToLive() {
         return timeToLive;
     }
+
+    public String toString() {
+        return "[Author: " + author.getName() + ", Type: " + tag.getType() + ", Data: " + details.toString() + "]";
+    }
 }
