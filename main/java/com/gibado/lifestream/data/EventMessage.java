@@ -9,14 +9,16 @@ public class EventMessage {
     private final Contributor author;
     private final Object details;
     private final EventMessageTag tag;
+    /** How long this message should live, in seconds, before being destroyed */
     private final long timeToLive;
+    private long deathTime;
 
     public EventMessage(String type, Object details) {
         this(type, details, null);
     }
 
     public EventMessage(String type, Object details, Contributor contributor) {
-        this(type, details, contributor, 0);
+        this(type, details, contributor, 1);
     }
 
     public EventMessage(String type, Object details, Contributor contributor, long timeToLive) {
@@ -40,6 +42,14 @@ public class EventMessage {
 
     public long getTimeToLive() {
         return timeToLive;
+    }
+
+    public void setDeathTime(long deathTime) {
+        this.deathTime = deathTime;
+    }
+
+    public long getDeathTime() {
+        return this.deathTime;
     }
 
     public String toString() {

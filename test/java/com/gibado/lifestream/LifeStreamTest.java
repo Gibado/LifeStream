@@ -84,7 +84,7 @@ public class LifeStreamTest {
     }
 
     @Test
-    public void testHistorian() {
+    public void testHistorian() throws InterruptedException {
         LifeStreamLogger logger = new LifeStreamLogger();
         LifeStreamCounter counter = new LifeStreamCounter();
         Historian historian = new Historian();
@@ -108,5 +108,9 @@ public class LifeStreamTest {
             assertTrue(details instanceof Integer);
             assertEquals(index++, ((Integer) details).intValue());
         }
+
+        Thread.sleep(2000);
+
+        assertEquals(0, lifeStream.getEventMessageStorageSize());
     }
 }
